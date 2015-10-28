@@ -31,7 +31,7 @@ public class Main {
                     }//End of for loop
                     HashMap m = new HashMap();
                     m.put("threads", threadsList);
-                    m.put("username", user_name);
+                    m.put("loginUsername", user_name);
                     return new ModelAndView(m, "threads.html");
                 }),
                 new MustacheTemplateEngine()
