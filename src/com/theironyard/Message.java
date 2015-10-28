@@ -6,13 +6,13 @@ package com.theironyard;
 public class Message {
     int id;
     int replyID;
-    String userName;
+    String username;
     String text;
 
-    public Message(int id, int replyID, String userName, String text) {
+    public Message(int id, int replyID, String username, String text) {
         this.id = id;
         this.replyID = replyID;
-        this.userName = userName;
+        this.username = username;
         this.text = text;
     }//End of Constructor
 
