@@ -32,6 +32,7 @@ public class Main {
                     HashMap m = new HashMap();
                     m.put("threads", threadsList);
                     m.put("loginUsername", user_name);
+                    m.put("replyId", -1);
                     return new ModelAndView(m, "threads.html");
                 }),
                 new MustacheTemplateEngine()
@@ -40,12 +41,19 @@ public class Main {
         Spark.get(
                 "/replies",
                 ((request1, response1) -> {
+                    Session session = request1.session();
+                    String username = session.attribute("username");
+
                     HashMap m = new HashMap();
+                    m.put("loginUsername", username);
                     String id = request1.queryParams("id");
                     try{
                         int idNum = Integer.valueOf(id);
                         Message message = messageArrayList.get(idNum);
                         m.put("message", message);
+                        m.put("replyId", message.id);
+
+
                         ArrayList<Message> repliesArrayList = new ArrayList();
                         for(Message message1 : messageArrayList){
                             if(message1.replyID == message.id){
@@ -60,6 +68,30 @@ public class Main {
                 }),
                 new MustacheTemplateEngine()
         );
+
+
+        Spark.post(
+                "/create-message",
+                ((request1, response1) -> {
+                    Session session = request1.session();
+                    String username = session.attribute("username");
+                    if(username == null){
+                        Spark.halt(403);
+                    }
+                    String replyId = request1.queryParams("replyId");
+                    String text = request1.queryParams("text");
+
+                    try{
+                        int replyIdNum = Integer.valueOf(replyId);
+                        Message message = new Message(messageArrayList.size(), replyIdNum, username, text);
+                        messageArrayList.add(message);
+                    }catch (Exception e){
+
+                    }
+                    response1.redirect(request1.headers("Referer"));
+                    return "";
+                })
+        );//End of Spark.post() "/create-message"
 
         Spark.post(
                 "/login",
@@ -83,7 +115,7 @@ public class Main {
                     Session session = request.session();
                     session.attribute("username", username);
 
-                    response.redirect("/");
+                    response.redirect(request.headers("Referer"));
                     return "";
                 })
         );//End of Spark.post "/login"

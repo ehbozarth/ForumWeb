@@ -1,5 +1,10 @@
 {{#loginUsername}}
 Welcome, {{loginUsername}}!<br>
+<form action="create-message" method="post">
+    <input type="hidden" name="replyId" value="{{replyId}}"/>
+    <input type="text" name ="text" placeholder="Write A Message" size="50"/>
+    <button type="submit">Submit Message</button>
+</form>
 {{/loginUsername}}
 
 {{^loginUsername}}
@@ -9,3 +14,4 @@ Welcome, {{loginUsername}}!<br>
     <button type="submit">Log in or Create Account</button>
 </form>
 {{/loginUsername}}
+
